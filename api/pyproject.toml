@@ -1,0 +1,13 @@
+[project]
+name = "metrics-backend-api"
+version = "0.1.0"
+description = "A FastAPI backend service for user authentication, metrics ingestion, and metrics retrieval with JWT-based security."
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+    "alembic>=1.18.4",
+    "fastapi>=0.136.1",
+    "psycopg2-binary>=2.9.12",
+    "sqlalchemy>=2.0.49",
+    "uvicorn>=0.46.0",
+]
