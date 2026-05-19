@@ -36,6 +36,23 @@ def get_user_by_username(db: Session, username: str) -> User | None:
     return db.query(User).filter(User.username == username).first()
 
 
+def get_user_by_id(db: Session, user_id: str) -> User | None:
+    """
+    Retrieve a user by their unique identifier.
+
+    This function queries the database to find and return a user whose unique
+    identifier matches the provided `user_id`. If no user is found, it returns `None`.
+
+    :param db: Database session to be used for the query
+    :type db: Session
+    :param user_id: The unique identifier of the user to be retrieved
+    :type user_id: str
+    :return: The user object if found or `None` if no user matches the specified `user_id`
+    :rtype: User | None
+    """
+    return db.query(User).filter(User.id == user_id).first()
+
+
 def create_user(
     db: Session,
     *,

@@ -15,6 +15,18 @@ SALT_BYTES = 16
 
 TOKEN_ALGORITHM = "HS256"
 
+def hash_app_token(token: str) -> str:
+    """
+    Creates a deterministic HMAC-SHA256 hash for app tokens.
+
+    Unlike password hashes, app token hashes must be deterministic so the incoming
+    token can be hashed and looked up in the database.
+    """
+    return hmac.new(
+        settings.SECRET_KEY.encode("utf-8"),
+        token.encode("utf-8"),
+        hashlib.sha256,
+    ).hexdigest()
 
 def hash_password(password: str) -> str:
     """
