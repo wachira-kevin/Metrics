@@ -1,4 +1,3 @@
-import pytest
 import datetime
 
 def test_register(client):
