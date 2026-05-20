@@ -526,6 +526,48 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
+DEMO_USER_EMAILS = [
+    "admin@example.com",
+    "user1@example.com",
+    "user2@example.com",
+]
+
+
+def demo_seed_data_exists(db) -> bool:
+    """
+    Returns True when demo users, app tokens, and metric events already exist.
+
+    This prevents inserting another large batch of metric events every time the
+    app starts locally or inside Docker.
+    """
+    demo_users = db.query(User).filter(User.email.in_(DEMO_USER_EMAILS)).all()
+
+    if len(demo_users) < len(DEMO_USER_EMAILS):
+        return False
+
+    demo_user_ids = [user.id for user in demo_users]
+
+    demo_app_tokens = (
+        db.query(AppToken)
+        .filter(AppToken.user_id.in_(demo_user_ids))
+        .all()
+    )
+
+    if not demo_app_tokens:
+        return False
+
+    demo_app_token_ids = [app_token.id for app_token in demo_app_tokens]
+
+    demo_metric_event_exists = (
+        db.query(MetricEvent.id)
+        .filter(MetricEvent.app_token_id.in_(demo_app_token_ids))
+        .first()
+        is not None
+    )
+
+    return demo_metric_event_exists
+
+
 def main() -> None:
     args = parse_args()
 
@@ -534,6 +576,10 @@ def main() -> None:
     try:
         if args.reset:
             delete_existing_demo_data(db)
+
+        if not args.reset and demo_seed_data_exists(db):
+            print("Demo seed data already exists. Skipping seed.")
+            return
 
         app_tokens = seed_users_and_tokens(db)
 
