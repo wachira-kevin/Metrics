@@ -1,0 +1,42 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: metrics-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: metrics_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d metrics_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  metrics-api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    container_name: metrics-api
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DATABASE_URI: postgresql://postgres:postgres@postgres:5432/metrics_db
+      APP_HOST: 0.0.0.0
+      APP_PORT: 8000
+      APP_NAME: Metrics API
+      APP_VERSION: 1.0.0
+      SECRET_KEY: change-this-secret-key-in-local-dev
+      ACCESS_TOKEN_EXPIRE_SECONDS: 900
+      REFRESH_TOKEN_EXPIRE_SECONDS: 604800
+    ports:
+      - "8000:8000"
+
+volumes:
+  postgres_data:
