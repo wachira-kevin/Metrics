@@ -4,8 +4,8 @@
 
 | Criterion | Weight | Personal Evaluation |
 |---|---|---|
-| Java SDK — Architecture & Thread Safety | 25% | 0% |
-| Java SDK — Metric Coverage & Batching | 15% | 0% |
+| Java SDK — Architecture & Thread Safety | 25% | 20% |
+| Java SDK — Metric Coverage & Batching | 15% | 13% |
 | FastAPI Auth — Security & JWT Handling | 20% | 20% |
 | Analytics API — Query Correctness | 20% | 20% |
 | Code Quality & Documentation | 10% | 10% |
@@ -17,7 +17,7 @@
 
 | Total | Score |
 |---|---|
-| Final Evaluation | 60% |
+| Final Evaluation | 93% |
 
 ---
 
@@ -30,9 +30,8 @@
 - Added tests to improve reliability
 
 ### Areas for Improvement
-- Improve Java SDK architecture and thread safety
-- Add batching and expanded metric coverage in the SDK
+- Proper testing of the SDK on app
 - Improve scalability and observability
 - Add better session management and distributed architecture improvements
-
+- 
 ---
